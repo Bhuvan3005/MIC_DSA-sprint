@@ -1,0 +1,16 @@
+module.exports = {
+  User: require('./User'),
+  Question: require('./Question'),
+  DailyChallenge: require('./DailyChallenge'),
+  Completion: require('./Completion'),
+  Streak: require('./Streak'),
+  VideoSolution: require('./VideoSolution'),
+  Roadmap: require('./Roadmap'),
+  RoadmapProgress: require('./RoadmapProgress'),
+  Badge: require('./Badge'),
+  UserBadge: require('./UserBadge'),
+  PointsTransaction: require('./PointsTransaction'),
+  Competition: require('./Competition'),
+  Setting: require('./Setting'),
+  Avatar: require('./Avatar'),
+};
