@@ -122,18 +122,11 @@ git push -u origin main
 
 The repository includes both lockfiles and the `.env.example` templates. Git ignores local credentials, dependencies, builds and database files.
 
-### Deploy the API
+### Deploy on Vercel
 
-1. Provision a MongoDB Atlas cluster and grant the API host network access.
-2. Create a Node.js service on Render or Railway using `server` as its root directory. Use Node.js 22, `npm ci` to install dependencies and `npm start` to run the API.
-3. Set `NODE_ENV=production`, `MONGODB_URI`, `JWT_SECRET`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in the API host's environment. Set `CLIENT_URL` to the public Netlify site origin and `CROSS_SITE_COOKIES=false`.
-4. Check `/api/health` on the HTTPS API URL. Run `npm run seed` from the API host's shell if you want starter content.
-
-### Deploy the frontend on Netlify
-
-1. Import the GitHub repository in Netlify. The root `netlify.toml` sets the base directory to `client`, the build command to `npm run build:netlify`, and the publish directory to `dist` relative to that base.
-2. Set `CODESPRINT_API_ORIGIN` in Netlify's build environment to the HTTPS API origin, such as `https://codesprint-api.onrender.com`. Leave `VITE_API_URL` empty so the browser uses the same-origin API proxy and auth cookies.
-3. Deploy. Open `/api/health` on the Netlify site to check the proxy, reload a route such as `/login` to check client-side routing, then sign in.
+1. Import this repository into Vercel. Keep the Root Directory at the repository root and select Node.js 22.x. `vercel.json` builds the Vite frontend and serves Express under `/api` on the same domain.
+2. Grant the Vercel function network access to your MongoDB Atlas cluster. Add `MONGODB_URI`, `JWT_SECRET`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` to the Production environment. Set `NODE_ENV=production` and `CLIENT_URL` to your public Vercel origin, including `https://`. Use `AUTO_INDEX=true` for a fresh database so MongoDB creates the application's indexes. Leave `VITE_API_URL` and `CODESPRINT_API_ORIGIN` unset.
+3. Deploy. Open `/api/health`, reload `/login`, and sign in. To add sample content, run `npm run seed` from `server` with the target MongoDB environment configured.
 
 **Cloudinary:** create a free account, copy cloud name/key/secret into the server env. Uploads go browser → Cloudinary using a signature minted by `POST /api/admin/videos/signature` (staff only). The secret never reaches the browser.
 

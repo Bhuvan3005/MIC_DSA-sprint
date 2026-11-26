@@ -11,13 +11,13 @@ async function bootstrap() {
   await getSettings();
   await ensureDefaultBadges();
   if (env.ADMIN_EMAIL && env.ADMIN_PASSWORD) {
-    const email = env.ADMIN_EMAIL.toLowerCase();
+    const email = env.ADMIN_EMAIL.trim().toLowerCase();
     if (!(await User.exists({ email }))) {
-      await User.create({
+      const result = await User.updateOne({ email }, { $setOnInsert: {
         name: 'CodeSprint Admin', email, role: 'ADMIN', college: 'Other', graduationYear: 2030,
         passwordHash: await bcrypt.hash(env.ADMIN_PASSWORD, 12),
-      });
-      console.log(`Created initial admin account for ${email}`);
+      } }, { upsert: true });
+      if (result.upsertedCount) console.log(`Created initial admin account for ${email}`);
     }
   }
 }
